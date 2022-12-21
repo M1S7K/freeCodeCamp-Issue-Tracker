@@ -11,12 +11,14 @@ module.exports = function (app) {
     .get(function (req, res){
       let project = req.params.project;
       const { _id, open, issue_title, issue_text, created_by, assigned_to, status_text } = req.query;
+      console.log(project)
+      console.log(req.query)
       // chain commands
       ProjectModel.aggregate([
         // match project
         { $match: { name: project } },
         // deconstruct an array
-        { $unwind: "issues" },
+        { $unwind: "$issues" },
          // check if id is present
          _id !== undefined ? { $match: { "issues._id": ObjectId(_id) } } : { $match: {} },
          // check if open is present
