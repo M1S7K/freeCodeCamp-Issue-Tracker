@@ -3,36 +3,35 @@ const e = require('express');
 const mongoose = require('mongoose');
 const IssueModel = require('../database/models').Issue;
 const ProjectModel = require('../database/models').Project;
+const ObjectId = mongoose.Types.ObjectId;
 
 module.exports = function (app) {
 
   app.route('/api/issues/:project')
   
     .get(function (req, res){
-      let project = req.params.project;
+      let projectName = req.params.project;
       const { _id, open, issue_title, issue_text, created_by, assigned_to, status_text } = req.query;
-      console.log(project)
-      console.log(req.query)
       // chain commands
       ProjectModel.aggregate([
         // match project
-        { $match: { name: project } },
+        { $match: { name: projectName } },
         // deconstruct an array
         { $unwind: "$issues" },
          // check if id is present
-         _id !== undefined ? { $match: { "issues._id": ObjectId(_id) } } : { $match: {} },
-         // check if open is present
-         open !== undefined ? { $match: { "issues.open": open } } : { $match: {} },
+         _id != undefined ? { $match: { "issues._id": ObjectId(_id) } } : { $match: {} },
+         // check if open is present and convert value to boolean
+         open != undefined ? { $match: { "issues.open": !!open } } : { $match: {} },
          // check if issue_title is present
-         issue_title !== undefined ? { $match: { "issues.issue_title": issue_title } } : { $match: {} },
+         issue_title != undefined ? { $match: { "issues.issue_title": issue_title } } : { $match: {} },
          // check if issue_text is present
-         issue_text !== undefined ? { $match: { "issues.issue_text": issue_text } } : { $match: {} },
+         issue_text != undefined ? { $match: { "issues.issue_text": issue_text } } : { $match: {} },
          // check if created_by is present
-         created_by !== undefined ? { $match: { "issues.created_by": created_by } } : { $match: {} },
+         created_by != undefined ? { $match: { "issues.created_by": created_by } } : { $match: {} },
          // check if assigned_to is present
-         assigned_to !== undefined ? { $match: { "issues.assigned_to": open } } : { $match: {} },
+         assigned_to != undefined ? { $match: { "issues.assigned_to": assigned_to } } : { $match: {} },
          // check if status_text is present
-         status_text !== undefined ? { $match: { "issues.open": status_text } } : { $match: {} }
+         status_text != undefined ? { $match: { "issues.status_text": status_text } } : { $match: {} },
       ]).exec((err, data) => {
         // check data
         if (!data) {
@@ -40,7 +39,7 @@ module.exports = function (app) {
         } else {
           // map data to get only issues
           let mappedData = data.map((item) => item.issues);
-          res.json(mappedData)
+          res.json(mappedData);
         }
       })
     })
@@ -61,8 +60,7 @@ module.exports = function (app) {
         updated_on: new Date(),
         created_by: created_by || "",
         assigned_to: assigned_to || "",
-        open: true,
-        status_text: status_text || ""
+        status_text: status_text || "",
       });
       // find a project according to the condition
       ProjectModel.findOne({ name: project }, (err, projectData) => {

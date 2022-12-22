@@ -9,8 +9,8 @@ const IssueSchema = new Schema({
     updated_on: Date,
     created_by: { type: String, required: true },
     assigned_to: String,
-    open: Boolean,
-    status_text: String
+    open: { type: Boolean, default: true },
+    status_text: String,
 });
 // issue model
 const Issue = mongoose.model("Issue", IssueSchema);
@@ -18,7 +18,7 @@ const Issue = mongoose.model("Issue", IssueSchema);
 // project schema
 const ProjectSchema = new Schema({
     name: { type: String, required: true },
-    issues: [IssueSchema]
+    issues: [IssueSchema],
 });
 // project model
 const Project = mongoose.model("Project", ProjectSchema);

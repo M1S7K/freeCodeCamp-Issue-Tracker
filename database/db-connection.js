@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 mongoose.set("strictQuery", false);
 const db = mongoose.connect(process.env.DB_CONNECTION, { 
     // remove support for several connection options that are no longer relevant with the new topology engine: autoReconnect.
