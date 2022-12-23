@@ -1,5 +1,4 @@
 'use strict';
-const e = require('express');
 const mongoose = require('mongoose');
 const IssueModel = require('../database/models').Issue;
 const ProjectModel = require('../database/models').Project;
@@ -105,25 +104,25 @@ module.exports = function (app) {
       }
       // check others
       if(!open && !issue_title && !issue_text && !created_by && !assigned_to && !status_text) {
-        res.json({error: "no update field(s) sent", _id: _id})
+        res.json({ error: 'no update field(s) sent', '_id': _id })
         return;
       }
       // find project
       ProjectModel.findOne({ name: project }, (err, projectData) => {
         // check if project exists
         if (err || !projectData) {
-          res.json({ error: "Could not update", _id: _id });
+          res.json({ error: 'could not update', '_id': _id });
         } else {
           // if exists
            const issueData = projectData.issues.id(_id);
            // if wrong id
            if (!issueData) {
-            res.json({ error: "Could not update", _id: _id });
+            res.json({ error: 'could not update', '_id': _id });
             return;
            }
            //update data
             issueData.issue_title = issue_title || issueData.issue_title;
-            issueData.open = open;
+            issueData.open = !Boolean(open);
             issueData.issue_text = issue_text || issueData.issue_text;
             issueData.created_by = created_by || issueData.created_by;
             issueData.assigned_to = assigned_to || issueData.assigned_to;
@@ -131,7 +130,7 @@ module.exports = function (app) {
             issueData.updated_on = new Date ();
             projectData.save((err, data) => {
               if (err || !data) {
-                res.json({ error: "Could not update", _id: _id });
+                res.json({ error: 'could not update', '_id': _id });
               } else {
                 res.json({ result: "successfully updated", _id: _id });
               }
@@ -146,21 +145,21 @@ module.exports = function (app) {
       const { _id } = req.body;
       // check id
       if (!_id) {
-        res.json({ error: "missing_id"});
+        res.json({ error: 'missing _id' });
         return;
       }
       // find project
       ProjectModel.findOne({name: project}, (err, projectData) => {
         // check if project exists
         if (err || !projectData) {
-          res.send({ error: "could not delete", _id: _id});
+          res.send({ error: 'could not delete', '_id': _id });
           return;
         } else {
           // find an issue which correspondents to the id
           const issueData = projectData.issues.id(_id);
           // check if doesn't exists
           if (!issueData) {
-            res.json({ error: "could not delete"});
+            res.json({ error: 'could not delete', '_id': _id });
             return;
           }
           // remove the issue from array
@@ -168,10 +167,10 @@ module.exports = function (app) {
           // save project data
           projectData.save((err, data) => {
             if (err || !data) {
-              res.json({ error: "could not delete", _id: _id });
+              res.json({ error: 'could not delete', '_id': _id });
               return;
             } else {
-              res.json({ result: "successfully deleted", _id: _id})
+              res.json({ result: 'successfully deleted', '_id': _id })
             }
           });
         }
