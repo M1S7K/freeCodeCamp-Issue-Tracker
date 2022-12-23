@@ -43,11 +43,12 @@
 </div>
 <div>
   <p>All the necessary steps were completed</p>
- 
+    <img src='./Result screenshots/Task-completed.png' width='380'>
 </div>
 <h2>Helpful Links</h2>
 <ol>
   <li><a href="https://www.chaijs.com">Chai Assertion Library</a>
   <li><a href="https://www.freecodecamp.org/learn/quality-assurance/">freeCodeCamp Quality Assurance course</a>
+  <li><a href="https://www.mongodb.com/docs/">MongoDB Documentation</a>
 </ol>
  </section>
