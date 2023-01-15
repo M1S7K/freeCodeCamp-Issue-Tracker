@@ -1,5 +1,5 @@
 <section>
-<h1 align="center">Metric-Imperial Converter</h1>
+<h1 align="center">Issue-tracker</h1>
 <h2>Description</h2>
 <p>A full stack JavaScript app that is functionally similar to this: https://issue-tracker.freecodecamp.rocks/.</p>
 <h2>Purpose</h2>
